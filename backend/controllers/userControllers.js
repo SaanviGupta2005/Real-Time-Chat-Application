@@ -1,7 +1,11 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
 const generateToken = require("../config/generateToken");
+const nodemailer = require("nodemailer");
+const crypto = require("crypto");
+const otpCache = {}; // Use Redis for production
 
+// Fetch all users except the logged-in user
 const allUsers = asyncHandler(async (req, res) => {
     const keyword = req.query.search
         ? {
@@ -16,27 +20,23 @@ const allUsers = asyncHandler(async (req, res) => {
     res.send(users);
 });
 
+// Register a new user
 const registerUser = asyncHandler(async (req, res) => {
     const { name, email, password, pic } = req.body;
 
     if (!name || !email || !password) {
         res.status(400);
-        throw new Error("Please Enter all the Feilds");
+        throw new Error("Please fill all the fields.");
     }
 
     const userExists = await User.findOne({ email });
 
     if (userExists) {
         res.status(400);
-        throw new Error("User already exists");
+        throw new Error("User already exists.");
     }
 
-    const user = await User.create({
-        name,
-        email,
-        password,
-        pic,
-    });
+    const user = await User.create({ name, email, password, pic });
 
     if (user) {
         res.status(201).json({
@@ -49,10 +49,11 @@ const registerUser = asyncHandler(async (req, res) => {
         });
     } else {
         res.status(400);
-        throw new Error("User not found");
+        throw new Error("User creation failed.");
     }
 });
 
+// Authenticate a user
 const authUser = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
 
@@ -69,8 +70,56 @@ const authUser = asyncHandler(async (req, res) => {
         });
     } else {
         res.status(401);
-        throw new Error("Invalid Email or Password");
+        throw new Error("Invalid email or password.");
     }
 });
 
-module.exports = { allUsers, registerUser, authUser };
+// Send OTP
+const sendOTP = asyncHandler(async (req, res) => {
+    const { email } = req.body;
+    if (!email) {
+        res.status(400);
+        throw new Error("Email is required.");
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000); // Generate a 6-digit OTP
+    otpCache[email] = { otp, expiresAt: Date.now() + 5 * 60 * 1000 }; // OTP expires in 5 minutes
+
+    const transporter = nodemailer.createTransport({
+        service: "Gmail",
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS,
+        },
+    });
+
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: "Your Login OTP",
+        text: `Your OTP for login is: ${otp}. It will expire in 5 minutes.`,
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.status(200).json({ message: "OTP sent successfully!" });
+});
+
+// Verify OTP
+const verifyOTP = asyncHandler(async (req, res) => {
+    const { email, otp } = req.body;
+
+    if (!otpCache[email] || otpCache[email].expiresAt < Date.now()) {
+        res.status(400);
+        throw new Error("OTP expired. Request a new one.");
+    }
+
+    if (otpCache[email].otp === parseInt(otp)) {
+        delete otpCache[email]; // Clear OTP after verification
+        res.status(200).json({ message: "OTP verified successfully!" });
+    } else {
+        res.status(400);
+        throw new Error("Invalid OTP.");
+    }
+});
+
+module.exports = { allUsers, registerUser, authUser, sendOTP, verifyOTP };
