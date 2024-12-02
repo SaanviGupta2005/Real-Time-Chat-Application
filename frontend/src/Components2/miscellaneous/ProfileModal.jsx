@@ -42,7 +42,7 @@ const ProfileModal = ({ user, children }) => {
               />
             </Box>
             <Text
-              fontSize={{ base: "24px", md: "30px" }}
+              fontSize={{ base: "20px", md: "24px" }}
               fontFamily="Work sans"
               mt="8"
               textAlign="center"
