@@ -5,7 +5,7 @@ import "./styles.css";
 import SingleChat from './SingleChat';
 
 const ChatBox = ({ fetchAgain, setFetchAgain }) => {
-  const { selectedChat } = ChatState();
+  const { selectedChat, theme } = ChatState();
   return (
     <Box
       display={{ base: selectedChat ? "flex" : "none", md: "flex" }}
@@ -13,6 +13,8 @@ const ChatBox = ({ fetchAgain, setFetchAgain }) => {
       flexDirection="column"
       padding={3}
       backgroundColor="white"
+      bg={theme === "dark" ? "gray.700" : "white"}
+      color={theme === "dark" ? "white" : "black"}
       width={{ base: "100%", md: "68%" }}
       borderRadius="lg"
       borderWidth="1px"

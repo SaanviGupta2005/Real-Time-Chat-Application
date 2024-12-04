@@ -9,7 +9,7 @@ import GroupChatModal from './miscellaneous/GroupChatModal';
 
 const MyChats = ({ fetchAgain }) => {
   const [loggedUser, setLoggedUser] = useState(null);
-  const { user, selectedChat, setSelectedChat, chats, setChats } = ChatState();
+  const { user, selectedChat, setSelectedChat, chats, setChats,theme } = ChatState();
 
   const fetchChats = useCallback(async () => {
     try {
@@ -41,14 +41,15 @@ const MyChats = ({ fetchAgain }) => {
   return (
     <Box
       display={{ base: selectedChat ? "none" : "flex", md: "flex" }}
+      bg={theme === "dark" ? "gray.700" : "gray.50"}
+      color={theme === "dark" ? "white" : "black"}
+      borderColor={theme === "dark" ? "gray.600" : "gray.200"}
       flexDirection="column"
       alignItems="center"
       padding={4}
-      bg="gray.50"
       width={{ base: "100%", md: "30%" }}
       borderRadius="lg"
       borderWidth="1px"
-      borderColor="gray.200"
       boxShadow="md"
     >
       <Box
@@ -78,7 +79,7 @@ const MyChats = ({ fetchAgain }) => {
         display="flex"
         flexDirection="column"
         padding="3"
-        bg="#F8F8F8"
+        bg={theme === "dark" ? "gray.800" : "#F8F8F8"}
         width="100%"
         height="100%"
         borderRadius="lg"

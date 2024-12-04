@@ -3,24 +3,27 @@ import { useHistory } from "react-router-dom";
 
 const ChatContext = createContext();
 
-const ChatProvider = ({ children
- }) => {
+const ChatProvider = ({ children }) => {
   const [selectedChat, setSelectedChat] = useState();
   const [user, setUser] = useState();
   const [notification, setNotification] = useState([]);
   const [chats, setChats] = useState([]);
+  const [theme, setTheme] = useState("light"); // Custom theme state
 
   const history = useHistory();
 
   useEffect(() => {
-  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-  setUser(userInfo);
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    setUser(userInfo);
 
-  if (!userInfo && history) {
-    history.push("/");
-  }
-}, [history]);
+    if (!userInfo && history) {
+      history.push("/");
+    }
+  }, [history]);
 
+  const toggleTheme = () => {
+    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
+  };
 
   return (
     <ChatContext.Provider
@@ -34,6 +37,8 @@ const ChatProvider = ({ children
         chats,
         setChats,
         history,
+        theme,
+        toggleTheme,
       }}
     >
       {children}

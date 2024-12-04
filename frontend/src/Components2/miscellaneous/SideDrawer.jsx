@@ -34,7 +34,7 @@ const SideDrawer = () => {
   const [loading, setLoading] = useState(false);
   const [loadingChat, setLoadingChat] = useState();
 
-  const { user, selectedChat, setSelectedChat, chats, setChats, notification, setNotification } = ChatState();
+  const { user, selectedChat, setSelectedChat, chats, setChats, notification, setNotification,theme } = ChatState();
   const history = useHistory();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -117,16 +117,21 @@ const SideDrawer = () => {
         display={'flex'}
         justifyContent={'space-between'}
         alignItems={'center'}
-        bg={'white'}
         w={'100%'}
         p={'5px 10px'}
         borderWidth={'5px'}
-        borderColor={'whitesmoke'}
+        bg={theme === "dark" ? "gray.700" : "gray.50"}
+        color={theme === "dark" ? "white" : "black"}
+        borderColor={theme === "dark" ? "gray.600" : "gray.200"}
       >
         <Tooltip content="Search Users to Chat" positioning={{ placement: "bottom-end" }}>
-          <Button variant="ghost" _hover={{ bg: "whitesmoke", color: "black" }} onClick={() => setOpen(true)}>
-            <i style={{ color: "black" }} className="fa-solid fa-magnifying-glass"></i>
-            <Text display={{ base: "none", md: "flex" }} px="2" color="black">Search User</Text>
+          <Button variant="ghost"
+            _hover={{ bg: "whitesmoke", color: "black" }}
+            onClick={() => setOpen(true)} // Open search sidebar only when clicked
+            bg={theme === "dark" ? "gray.700" : "gray.50"}
+            color={theme === "dark" ? "white" : "black"}>
+           <i style={{ color: theme === "dark" ? "white" : "black" }} className="fa-solid fa-magnifying-glass"></i>
+            <Text display={{ base: "none", md: "flex" }} px="2" color={theme === "dark" ? "white" : "black"}>Search User</Text>
           </Button>
         </Tooltip>
 
@@ -137,11 +142,17 @@ const SideDrawer = () => {
         <div>
           <MenuRoot style={{ p: "1" }}>
             <MenuTrigger asChild>
-              <Button variant="ghost" colorPalette="black" m="1" _hover={{ bg: "whitesmoke", color: "black" }}>
+              <Button
+                variant="ghost"
+                _hover={{ bg: "whitesmoke", color: "black" }}
+                // Remove the setOpen(true) on the bell icon
+                bg={theme === "dark" ? "gray.700" : "gray.50"}
+                color={theme === "dark" ? "white" : "black"}
+              >
                 <NotificationBadge
                   count={notification.length}
                   effect={Effect.SCALE} />
-                <i style={{ color: 'black', fontSize: '22px' }} className="fa-solid fa-bell"></i>
+                <i style={{ color: theme === "dark" ? "white" : "black", fontSize: '22px' }} className="fa-solid fa-bell"></i>
               </Button>
             </MenuTrigger>
             <MenuContent paddingLeft='2'>
@@ -160,9 +171,18 @@ const SideDrawer = () => {
 
           <MenuRoot style={{ p: "1" }}>
             <MenuTrigger asChild>
-              <Button style={{ color: 'black' }} variant="ghost" m="1" _hover={{ bg: "whitesmoke", color: "black" }}>
+              <Button variant="ghost"
+                _hover={{
+                  bg: theme === "dark" ? "gray.700" : "whitesmoke",
+                  color: theme === "dark" ? "white" : "black"
+                }}
+                onClick={() => setOpen(false)} // Prevent the sidebar from opening here
+                bg={theme === "dark" ? "gray.700" : "gray.50"}
+                color={theme === "dark" ? "white" : "black"}
+                m='1'
+              >
                 <Avatar name={user.name} src={user.pic} />
-                <i style={{ color: 'black' }} className="fa-solid fa-caret-down"></i>
+                <i style={{ color: theme === "dark" ? "white" : "black" }} className="fa-solid fa-caret-down"></i>
               </Button>
             </MenuTrigger>
             <MenuContent>
