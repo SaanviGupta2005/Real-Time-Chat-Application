@@ -33,7 +33,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     },
   };
 
-  const { selectedChat, setSelectedChat, user, notification, setNotification } = ChatState();
+  const { selectedChat, setSelectedChat, user, notification, setNotification, theme } = ChatState();
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
@@ -194,16 +194,17 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             flexDirection="column"
             justifyContent="flex-end"
             padding={3}
-            backgroundColor="#E8E8E8"
+            backgroundColor={theme === "dark" ? "#1A202C" : "#E8E8E8"} // Darker gray for dark theme, light gray for light theme
             width="100%"
             height="100%"
             borderRadius="lg"
             overflowY="hidden"
           >
+
             {loading ? (
               <Spinner size="xl" width={20} height={20} alignSelf="center" margin="auto" />
             ) : (
-              <ScrollableChat messages={messages} />
+              <ScrollableChat messages={messages} theme={theme} />
             )}
             <Box mt={3}>
               {istyping && (
@@ -214,11 +215,13 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               <Input
                 variant="filled"
                 placeholder="Enter a message..."
-                backgroundColor="#E0E0E0"
+                backgroundColor={theme === "dark" ? "#2D3748" : "#E0E0E0"} // Dark gray for dark theme, light gray for light theme
+                color={theme === "dark" ? "white" : "black"} // White text for dark theme, black text for light theme
                 value={newMessage}
                 onChange={typingHandler}
                 onKeyDown={sendMessage}
               />
+
             </Box>
           </Box>
         </>

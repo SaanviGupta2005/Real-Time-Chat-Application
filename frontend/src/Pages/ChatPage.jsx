@@ -5,7 +5,7 @@ import { Box, Button } from '@chakra-ui/react';
 import SideDrawer from '../Components2/miscellaneous/SideDrawer';
 import MyChats from '../Components2/MyChats';
 import ChatBox from '../Components2/ChatBox';
-import { IoMdSunny } from "react-icons/io";
+import { MdSunny } from "react-icons/md";
 import { FaMoon } from "react-icons/fa";
 
 const ChatPage = () => {
@@ -24,15 +24,19 @@ const ChatPage = () => {
           <SideDrawer />
           <Button
             onClick={toggleTheme}
-            bg={theme === "dark" ? "black.400" : "white.300"}
-            color={theme === "dark" ? "white.400" : "black.400"}
-            width={"16"}
-            height={"16"}
-            marginLeft={"2"}
-            borderRadius={"full"}
+            bg={theme === "dark" ? "gray.700" : "gray.200"} // Dark gray for dark theme, light gray for light theme
+            color={theme === "dark" ? "gray.200" : "gray.800"} 
+            width="16"
+            height="16"
+            marginLeft="2"
+            borderRadius="full"
+            _hover={{
+              bg: theme === "dark" ? "gray.700" : "gray.200", 
+            }}
           >
-            {theme === "dark" ? <IoMdSunny /> : <FaMoon />}
+            {theme === "dark" ? <MdSunny /> : <FaMoon />}
           </Button>
+
         </Box>
       )
       }
