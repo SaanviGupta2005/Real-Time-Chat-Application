@@ -142,7 +142,7 @@ const SignUp = () => {
         </Box>
         <Box width={"100%"} isRequired>
             <Text id="pic">Upload your picture</Text>
-            <Input type='file' p={1.5} accept='image/*' placeholder='Enter your Password: ' onChange={(e) => postDetails(e.target.files[0])} />
+            <Input type='file' p={1.5} accept='image/*' onChange={(e) => postDetails(e.target.files[0])} />
         </Box>
         <Button colorPalette={"blue"} width={"100%"} style={{marginTop: 15}} onClick={submitHandler} isLoading = {picLoading}>
             Sign Up

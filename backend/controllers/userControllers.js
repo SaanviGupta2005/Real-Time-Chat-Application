@@ -2,8 +2,7 @@ const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
 const generateToken = require("../config/generateToken");
 const nodemailer = require("nodemailer");
-const crypto = require("crypto");
-const otpCache = {}; // Use Redis for production
+const otpCache = {};
 
 // Fetch all users except the logged-in user
 const allUsers = asyncHandler(async (req, res) => {

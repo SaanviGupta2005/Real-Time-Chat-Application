@@ -86,7 +86,7 @@ const MyChats = ({ fetchAgain }) => {
         overflowY="hidden"
       >
         {chats ? (
-          <Stack overflowY="scroll">
+          <Stack overflowY="auto">
             {chats.map((chat) => (
               <Box
                 key={chat._id}
